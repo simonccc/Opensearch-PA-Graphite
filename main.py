@@ -61,7 +61,7 @@ class MetricWriter():
 
 def init_graphite():
     ''' Init Graphite '''
-    graphyte.init(cfg.graphite['g_host'], prefix=cfg.graphite['prefix'] )
+    graphyte.init(cfg.graphite['g_host'], prefix=cfg.graphite['prefix'], interval=20 )
 
 if __name__ == '__main__':
 
