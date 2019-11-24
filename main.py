@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
     # limit execution speed
     target=(int(time.time())) + 5
-#    print(int(time.time()) + 'target: ' + str(target)))
+    # print(str(int(time.time())) + ' target: ' + str(target))
 
     docs = MetricGatherer().get_all_metrics()
     MetricWriter().put_graphite(docs)
