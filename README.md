@@ -9,9 +9,12 @@ It pushes those metrics to Graphite for visualiation with eg Grafana.
 
 The code requires Python 3
 
-See requirements.txt
+pip3 install -r requirements.txt
+
 
 ## Basic Usage
+
+Create a config.py based on the example example-config.py
 
 python3 main.py
 
