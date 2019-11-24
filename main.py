@@ -4,12 +4,13 @@ import sys
 import argparse
 from datetime import datetime
 import json
+import time
 
 import metric_descriptions
 from node_tracker import NodeTracker
-from pytz import timezone
 import requests
 from result_parser import ResultParser
+
 import config as cfg
 import graphyte
 
@@ -33,8 +34,7 @@ class MetricGatherer():
 
     def get_all_metrics(self):
         ''' Loops through all the metric descriptions, sending one at a time,
-            parsing the results, and returning a list of dicts, each one 
-            representing one future Elasticsearch document. '''
+            parsing the results, and returning a list of dicts '''
         docs = []
         for metric in metric_descriptions.get_working_metric_descriptions():
             result = self.get_metric(metric)
@@ -46,30 +46,37 @@ class MetricGatherer():
                     docs.append(doc)
         return docs
 
-
 class MetricWriter():
-    ''' Use this class to send metrics to graphite'''
+  def put_graphite(self, docs):
+      for doc in docs:
+	    
+          keys = list(doc)
+          hostname = doc['node_fqdn'].split('.')[0]
 
-    def put_doc_batches(self, docs):
-        for doc in docs:
+          metric_path = hostname + '.openelastic.' + doc['metric'] + '.' + str(doc[keys[1]]) + '_' + doc['agg'] 
+          metric_value = (doc[doc['metric']])
+#          print(metric_path + " " + str(metric_value))
+          graphyte.send(metric_path, float(metric_value))
 
-	    # new formatting
-            keys = list(doc)
-
-            metric1 = doc['node_fqdn'] + '.' + doc['metric'] + '.'
-            metric2 = str(doc[keys[1]]) + '_' + doc['agg']
-            print(metric1 + metric2 + " " + str(doc[keys[2]]))
 
 def init_graphite():
     ''' Init Graphite '''
-    print('connecting to graphite')
-    graphyte.init('carbon1.localnetm', prefix='openelastic')
-    
+    graphyte.init(cfg.graphite['g_host'], prefix=cfg.graphite['prefix'] )
 
 if __name__ == '__main__':
-    init_graphite()
-    while 1:
-    #    print('Gathering docs')
-        docs = MetricGatherer().get_all_metrics()
-    #    print('Sending docs: ', len(docs))
-        MetricWriter().put_doc_batches(docs)
+
+  init_graphite()
+
+  while 1:
+
+    # limit execution speed
+    target=(int(time.time())) + 5
+#    print(int(time.time()) + 'target: ' + str(target)))
+
+    docs = MetricGatherer().get_all_metrics()
+    MetricWriter().put_graphite(docs)
+
+    while True:
+      if int(time.time()) >= int(target):
+        break
+      time.sleep(1)

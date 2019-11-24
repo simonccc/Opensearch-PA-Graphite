@@ -15,7 +15,6 @@ class NodeTracker():
         self._retrieve_node_ids_and_ips()
 
     def _retrieve_node_ids_and_ips(self):
-#        pass=cfg.elastic['pass']
         response = requests.get('https://' + cfg.elastic['es_host'] + ':9200/_nodes',
             auth=((cfg.elastic['user']), (cfg.elastic['pass'])),
             verify=False,timeout=2)

@@ -1,12 +1,14 @@
 # Performance analyzer output to Graphite
 
 This library provides a main.py script that collects all of the metrics
-surfaced by Performance Analyzer, across their dimensions and aggregations. It 
-pushes those metrics to Graphite for visualiation with eg Grafana.
+surfaced by Performance Analyzer, across their dimensions and aggregations. 
+
+It pushes those metrics to Graphite for visualiation with eg Grafana.
 
 ## Requirements
 
 The code requires Python 3
+
 See requirements.txt
 
 ## Basic Usage
