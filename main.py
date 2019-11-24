@@ -11,7 +11,7 @@ from pytz import timezone
 import requests
 from result_parser import ResultParser
 import config as cfg
-
+import graphyte
 
 class MetricGatherer():
     ''' Use this class to retrieve metrics from Open Distro's Performance
@@ -48,77 +48,28 @@ class MetricGatherer():
 
 
 class MetricWriter():
-    ''' Use this class to send documents in bulk to Elasticsearch'''
-
-    def __init__(self, args):
-        ''' Recieves the command-line args, which must include an index root,
-            and an ES type. '''
-        self.index_name = args.index_name 
-        self.index_type = args.index_type
-        self.seven = args.seven
-
-    def now_pst(self):
-        '''Return the current time in PST timezone'''
-        ''' TODO: This should use the timezone of the current host or UTC.'''
-        now_utc = datetime.now(timezone('UTC'))
-        return now_utc.astimezone(timezone('US/Pacific'))
+    ''' Use this class to send metrics to graphite'''
 
     def put_doc_batches(self, docs):
-        ''' Takes a list of Elasticsearch documents, interleaves the control
-            lines and sends them via the _bulk API.'''
-        batch = []
         for doc in docs:
-            ''' It would be better to take the index name from the doc's
-                timestamp. Otherwise weird stuff happens at midnight.'''
-            batch.append((doc))
 
 	    # new formatting
-            
-            print (doc['node_fqdn'] + ',' + doc['metric'] + ',' , end ='')
-            statickeys = ['node_fqdn', 'metric', '@timestamp', 'agg']
-            for keys in doc.keys():
-              if keys in statickeys:
-                continue
-#              print('key ' + keys +' ')
-              print(str(doc[keys]) + ',' , end='')
-            print(doc['agg'])
-#            print (doc['node_fqdn'] + ',' +  doc['metric'])
+            keys = list(doc)
 
-#        bulk = '\n'.join(batch) + '\n'
-        bulk = (batch)
-#        print("Sending batch of {} characters".format(len(bulk)))
+            metric1 = doc['node_fqdn'] + '.' + doc['metric'] + '.'
+            metric2 = str(doc[keys[1]]) + '_' + doc['agg']
+            print(metric1 + metric2 + " " + str(doc[keys[2]]))
 
-
-#        print(json.dumps(bulk, indent=4))
-
-
-
-#        result = requests.post('https://localhost:9200/_bulk', 
-#                               data=bulk,
-#                               headers={'Content-Type':'application/json'},
-#                               ### HACK ALERT !!! TODO TODO TODO ###
-#                               auth=('admin', 'admin'),
-#                               verify=False)
-#        print('Sent batch', result.status_code)
-
-def get_args():
-    ''' Parse command line arguments '''
-    description = 'Send performance data from Open Distro for Elasticsearch to Elasticsearch'
-    parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('-i', '--index-name', type=str, default='pa',
-                        help='root string for the index name for performance indexes', 
-                        action='store')
-    parser.add_argument('-t', '--index-type', type=str, default='log',
-                        help='root string for the index type for performance indexes', 
-                        action='store')
-    parser.add_argument('--seven', default=False, action='store_true',
-                        help='send data to ES 7 (removes type)')
-    args = parser.parse_args()
-    return args
+def init_graphite():
+    ''' Init Graphite '''
+    print('connecting to graphite')
+    graphyte.init('carbon1.localnetm', prefix='openelastic')
+    
 
 if __name__ == '__main__':
+    init_graphite()
     while 1:
     #    print('Gathering docs')
         docs = MetricGatherer().get_all_metrics()
     #    print('Sending docs: ', len(docs))
-        MetricWriter(get_args()).put_doc_batches(docs)
+        MetricWriter().put_doc_batches(docs)
