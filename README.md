@@ -9,7 +9,7 @@ It is a very small modificaton of the code posted here https://github.com/opendi
 
 It uses the node hostnames rather that nodeid's and assumes you want to write to graphite in the form of
 
-$prefix/nodename/openleastic/$metric blah
+$prefix/nodename/openelastic/$metric blah
 
 ## Requirements
 
