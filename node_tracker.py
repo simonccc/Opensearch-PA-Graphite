@@ -1,5 +1,6 @@
 import json
 import requests
+from retry import retry
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 import config as cfg
@@ -9,6 +10,7 @@ class NodeTracker():
         ip address. Construct the object, then use ip() to retrieve the 
         address from the node name.'''
 
+    @retry(delay=1)
     def __init__(self):
         ''' Constructs a local dict, and fills it.'''
         self._nodes_map = dict()

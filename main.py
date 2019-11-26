@@ -5,6 +5,7 @@ import argparse
 from datetime import datetime
 import json
 import time
+from retry import retry
 
 import metric_descriptions
 from node_tracker import NodeTracker
@@ -27,6 +28,7 @@ class MetricGatherer():
             metric_description.name, ",".join(metric_description.dimensions),
             metric_description.agg)
 
+    @retry(delay=1)
     def get_metric(self, metric_description):
         BASE_URL = 'http://' + cfg.elastic['es_host'] + ':9600/_opendistro/_performanceanalyzer/metrics?'
         url = "{}{}".format(BASE_URL, self.to_url_params(metric_description))
@@ -49,7 +51,7 @@ class MetricGatherer():
 class MetricWriter():
   def put_graphite(self, docs):
       for doc in docs:
-	    
+
           keys = list(doc)
           hostname = doc['node_fqdn'].split('.')[0]
 
@@ -71,9 +73,11 @@ if __name__ == '__main__':
 
     # limit execution speed
     target=(int(time.time())) + 5
+
     # print(str(int(time.time())) + ' target: ' + str(target))
 
     docs = MetricGatherer().get_all_metrics()
+
     MetricWriter().put_graphite(docs)
 
     while True:
