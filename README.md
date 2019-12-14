@@ -1,7 +1,6 @@
-# Opendistro for Elasticsearch Performance analyzer output to Graphite
+# ODFES Performance analyzer output to Graphite
 
-This library provides a main.py script that collects some of the metrics
-surfaced by Performance Analyzer.
+Provides a main.py script that collects some of the metrics exported Performance Analyzer.
 
 It pushes those metrics to Graphite for visualiation with eg Grafana.
 
@@ -13,7 +12,7 @@ $prefix/nodename/openelastic/$metric blah
 
 ## Requirements
 
-The code requires Python 3
+python 3 only I think
 
 pip3 install -r requirements.txt
 
