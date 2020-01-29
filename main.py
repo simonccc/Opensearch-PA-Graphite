@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 import sys
 import argparse
@@ -16,19 +16,15 @@ import config as cfg
 import graphyte
 
 class MetricGatherer():
-    ''' Use this class to retrieve metrics from Open Distro's Performance
-        Analyzer. Call get_all_metrics() to receive a list of ES docs. '''
-
     def __init__(self):
         self.node_tracker = NodeTracker()
 
     def to_url_params(self, metric_description):
-        '''Converts a metric description into the corresponding URL params'''
         return "metrics={}&dim={}&agg={}&nodes=all".format(
-            metric_description.name, ",".join(metric_description.dimensions),
-            metric_description.agg)
+            metric_description.name, ",".join(metric_description.dimensions),metric_description.agg)
 
     @retry(delay=1)
+
     def get_metric(self, metric_description):
         BASE_URL = 'http://' + cfg.elastic['es_host'] + ':9600/_opendistro/_performanceanalyzer/metrics?'
         url = "{}{}".format(BASE_URL, self.to_url_params(metric_description))

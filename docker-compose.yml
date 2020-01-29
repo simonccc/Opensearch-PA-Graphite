@@ -1,0 +1,14 @@
+version: '3.5'
+
+services:
+   pa-to-graphite:
+      image: pa-to-graphite
+      container_name: pa-to-graphite
+      restart: unless-stopped
+      hostname: pa-to-graphite
+      environment:
+        - es_host=https://elasticsearch-server:9200
+        - user=admin
+        - pass=admin
+        - g_host=graphite
+        - prefix=prefix

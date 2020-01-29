@@ -1,21 +1,7 @@
-'''
-
-Copyright 2019, Amazon Web Services Inc.
-
-SPDX-License-Identifier: MIT-0
-
-Defines a MetricDescription collection. Provides a single function that returns
-a list of all currently-working (April 2019) metric/agg/dimension combinations.
-Ideally, Open Distro would provide an API to retrieve this information. As of
-now, it has to be declarative like this.
-'''
-
 from collections import namedtuple
-
 MetricDescription = namedtuple('MetricDescription', ['name', 'agg', 'dimensions'])
 
 def get_working_metric_descriptions():
-    ''' Return a list of all of the metric descriptions for PA.'''
     return [
         MetricDescription(name='CPU_Utilization', agg='avg', dimensions=[ 'Operation', ]),
         MetricDescription(name='Heap_AllocRate', agg='avg', dimensions=[ 'Operation', ]),
