@@ -11,4 +11,5 @@ services:
         - user=admin
         - pass=admin
         - g_host=graphite
+        - g_port=2003
         - prefix=prefix
