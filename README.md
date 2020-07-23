@@ -1,4 +1,4 @@
-# ODFES Performance analyzer output to Graphite
+# Opendistro Elasticsearch Performance analyzer output to Graphite
 
 Provides a main.py script that collects some of the metrics exported Performance Analyzer.
 
