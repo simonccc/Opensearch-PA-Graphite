@@ -7,5 +7,4 @@ COPY main.py /
 COPY metric_descriptions.py /
 COPY node_tracker.py /
 COPY result_parser.py /
-COPY docker-config.py /config.py
 ENTRYPOINT [ "python3", "-u", "./main.py" ]
