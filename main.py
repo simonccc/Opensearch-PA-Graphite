@@ -26,7 +26,7 @@ class MetricGatherer():
     @retry(delay=1)
 
     def get_metric(self, metric_description):
-        BASE_URL = 'http://' + cfg.elastic['es_host'] + ':9600/_opendistro/_performanceanalyzer/metrics?'
+        BASE_URL = 'http://' + cfg.elastic['es_host'] + ':9600/_plugins/_performanceanalyzer/metrics?'
         url = "{}{}".format(BASE_URL, self.to_url_params(metric_description))
         return requests.get(url,timeout=2)
 
@@ -51,9 +51,8 @@ class MetricWriter():
           keys = list(doc)
           hostname = doc['node_fqdn'].split('.')[0]
 
-          metric_path = hostname + '.openelastic.' + doc['metric'] + '.' + str(doc[keys[1]]) + '_' + doc['agg'] 
+          metric_path = hostname + '.opensearch.' + doc['metric'] + '.' + str(doc[keys[1]]) + '_' + doc['agg'] 
           metric_value = (doc[doc['metric']])
-#          print(metric_path + " " + str(metric_value))
           graphyte.send(metric_path, float(metric_value))
 
 
@@ -68,9 +67,9 @@ if __name__ == '__main__':
   while 1:
 
     # limit execution speed
-    target=(int(time.time())) + 5
+    target=(int(time.time())) + 10
 
-    # print(str(int(time.time())) + ' target: ' + str(target))
+    print(str(int(time.time())) + ' target: ' + str(target))
 
     docs = MetricGatherer().get_all_metrics()
 
