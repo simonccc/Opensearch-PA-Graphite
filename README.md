@@ -1,6 +1,6 @@
 # Opensearch Performance analyzer output to Graphite
 
-Provides a main.py script that collects some of the metrics exported Performance Analyzer.
+A script that collects some of the metrics exported Performance Analyzer.
 
 It pushes those metrics to Graphite for visualiation with eg Grafana.
 
@@ -8,7 +8,7 @@ It is a modificaton of the code posted here https://github.com/opendistro-for-el
 
 It uses the node hostnames rather that nodeid's and assumes you want to write to graphite in the form of
 
-$prefix/nodename/openelastic/$metric blah
+$prefix/nodename/opensearch/$metric blah
 
 ## Usage
 
