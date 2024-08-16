@@ -15,3 +15,6 @@ $prefix/nodename/opensearch/$metric blah
 Create a config.py based on the example example-config.py
 
 `python3 ./main.py`
+
+`python3 -m venv .venv` 
+`source .venv/bin/activate`
