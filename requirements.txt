@@ -3,6 +3,6 @@ chardet==3.0.4
 idna==3.15
 pytz==2019.2
 requests==2.32.4
-urllib3==2.6.3
+urllib3==2.7.0
 graphyte==1.6.0
 retry==0.9.2
